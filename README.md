@@ -70,6 +70,7 @@ Design a Caching Pattern to support multiple Caching implementations
 4. R1 forwards to EVICT CACHE
 5. EVICT CACHE removes I1 entry in cache
 6. Coverts GET to VIEW and forwards to Router R1
+7. Continue processing from step 3.in Scenario 1 for VIEW 
 
 
 
