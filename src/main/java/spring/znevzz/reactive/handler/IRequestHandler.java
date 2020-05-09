@@ -12,7 +12,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 
 public interface  IRequestHandler<T,R> extends HandlerFunction {
 
-    Flux<R> get(T t);
+    Mono<R> get(T t);
 
     default <T extends ServerResponse> Mono<T> welcome(ServerRequest serverRequest) {
         Mono welcomeMessage = Mono.empty();
