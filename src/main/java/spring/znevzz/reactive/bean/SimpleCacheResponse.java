@@ -10,6 +10,10 @@ public class SimpleCacheResponse implements ICacheResponse<String> {
 
     private String payload;
 
+    public SimpleCacheResponse(String cacheResult) {
+        this.payload = cacheResult;
+    }
+
     @Override
     public LocalDate getLastUpdated() {
         return LocalDate.now();
