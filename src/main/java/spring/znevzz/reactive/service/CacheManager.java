@@ -1,7 +1,7 @@
 package spring.znevzz.reactive.service;
 
-import lombok.AllArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -11,10 +11,10 @@ import spring.znevzz.reactive.constant.Action;
 import spring.znevzz.reactive.constant.Request;
 import spring.znevzz.reactive.router.CacheMessageRouter;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class CacheManager {
     @Autowired
@@ -31,23 +31,26 @@ public class CacheManager {
 
         delegateAction(request, action);
 
-        return responses.get(request).log();
+        log.info("Action={}, Response={}", action.name(), responses.toString());
+
+        return responses.get(request);
     }
 
     private void delegateAction(ICacheRequest request, Action action) {
         if (action == Action.GET_CACHE) {
             responses.put(request,
-                    cacheService.get(request).timeout(Duration.ofSeconds(1))
+                    cacheService.get(request)
             );
 
         } else if (action == Action.EVICT_CACHE) {
+            cacheService.evict(request);
             responses.put(request,
-                    cacheService.evict(request).timeout(Duration.ofSeconds(1))
+                    cacheService.put(request)
             );
 
         } else if (action == Action.PUT_CACHE) {
             responses.put(request,
-                    cacheService.put(request).timeout(Duration.ofSeconds(1))
+                    cacheService.put(request)
             );
         }
     }
