@@ -31,7 +31,7 @@ public class CacheManager {
 
         delegateAction(request, action);
 
-        return responses.get(request);
+        return responses.get(request).log();
     }
 
     private void delegateAction(ICacheRequest request, Action action) {

@@ -12,6 +12,8 @@ public interface  IRequestHandler<T,R> extends HandlerFunction {
 
     Mono<R> get(T t);
 
+    Flux<R> viewFromCache(T t);
+
     Flux<R> getFromCache(T t);
 
     default <T extends ServerResponse> Mono<T> welcome(ServerRequest serverRequest) {

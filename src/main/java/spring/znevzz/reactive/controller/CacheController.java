@@ -10,6 +10,8 @@ import spring.znevzz.reactive.bean.ICacheResponse;
 import spring.znevzz.reactive.bean.SimpleCacheRequest;
 import spring.znevzz.reactive.handler.IRequestHandler;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @RestController
 public class CacheController {
@@ -23,7 +25,17 @@ public class CacheController {
 
     @PostMapping("/cache")
     public Flux<ICacheResponse> fromCache(@RequestBody SimpleCacheRequest request) {
-        return handler.getFromCache(request);
+        Flux<ICacheResponse> firstFetch = handler.viewFromCache(request).log("viewFromCache");
+        Flux firstResult = firstFetch
+                .map(ICacheResponse::getPayload)
+                .filter(Optional::isPresent)
+                .log("result of viewFromCache");
+
+        firstFetch
+                .switchIfEmpty(handler.getFromCache(request))
+                .log("secondFetch");
+
+        return firstResult;
     }
 
 }

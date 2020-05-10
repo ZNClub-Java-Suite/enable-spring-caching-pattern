@@ -2,6 +2,7 @@ package spring.znevzz.reactive.service;
 
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import spring.znevzz.reactive.bean.ICacheRequest;
 import spring.znevzz.reactive.bean.ICacheResponse;
 import spring.znevzz.reactive.bean.SimpleCacheResponse;
@@ -24,11 +25,13 @@ public class SimpleCacheService implements ICacheService {
 
     @Override
     public Flux<ICacheResponse> put(ICacheRequest request) {
-        Flux<String> stringFlux = service.someAPI(request);
-        cache.put(request.getPayload(), stringFlux.blockFirst());
+
+        service.someAPI(request)
+                .subscribe(response -> cache.put(request.getPayload(), response));
+
         return Flux.just(
                 new SimpleCacheResponse("Fetching"),
-                new SimpleCacheResponse(stringFlux.blockFirst())
+                new SimpleCacheResponse(cache.get(request.getPayload()).toString())
         );
     }
 

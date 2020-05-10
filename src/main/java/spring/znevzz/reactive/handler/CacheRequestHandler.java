@@ -29,8 +29,15 @@ public class CacheRequestHandler implements IRequestHandler<ICacheRequest, ICach
     }
 
     @Override
-    public Flux<ICacheResponse> getFromCache(ICacheRequest request) {
+    public Flux<ICacheResponse> viewFromCache(ICacheRequest request) {
         return manager.handleCacheRequest(request, Request.VIEW)
+                .timeout(Duration.ofSeconds(5))
+                .retry(2);
+    }
+
+    @Override
+    public Flux<ICacheResponse> getFromCache(ICacheRequest request) {
+        return manager.handleCacheRequest(request, Request.GET)
                 .timeout(Duration.ofSeconds(5))
                 .retry(2);
     }

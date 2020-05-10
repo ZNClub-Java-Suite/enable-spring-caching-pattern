@@ -56,6 +56,23 @@ class CacheControllerTest {
                 .expectStatus()
                 .is2xxSuccessful();
     }
+
+
+    @Test
+    void getFromCacheCheckResponse() {
+        SimpleCacheRequest request = new SimpleCacheRequest();
+        request.setUser("test");
+        request.setPayload("{}");
+        webTestClient.post()
+                .uri("/cache")
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .json("[{}]");
+    }
     @TestConfiguration
     static class TestConfig {
         @Bean
