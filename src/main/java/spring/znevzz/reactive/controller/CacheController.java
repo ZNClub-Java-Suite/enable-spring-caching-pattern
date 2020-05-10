@@ -23,9 +23,7 @@ public class CacheController {
 
     @PostMapping("/cache")
     public Flux<ICacheResponse> fromCache(@RequestBody SimpleCacheRequest request) {
-        Flux fromCache = handler.getFromCache(request);
-        fromCache.subscribe();
-        return fromCache;
+        return handler.getFromCache(request);
     }
 
 }

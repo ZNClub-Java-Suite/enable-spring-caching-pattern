@@ -7,9 +7,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import spring.znevzz.reactive.bean.ICacheRequest;
 import spring.znevzz.reactive.bean.ICacheResponse;
-import spring.znevzz.reactive.bean.SimpleCacheResponse;
 import spring.znevzz.reactive.constant.Request;
 import spring.znevzz.reactive.service.CacheManager;
+
+import java.time.Duration;
 
 @AllArgsConstructor
 @Component
@@ -29,9 +30,8 @@ public class CacheRequestHandler implements IRequestHandler<ICacheRequest, ICach
 
     @Override
     public Flux<ICacheResponse> getFromCache(ICacheRequest request) {
-        return Flux.just(
-                manager.handleCacheRequest(request, Request.VIEW)
-                        .orElse(new SimpleCacheResponse("Missing"))
-        );
+        return manager.handleCacheRequest(request, Request.VIEW)
+                .timeout(Duration.ofSeconds(5))
+                .retry(2);
     }
 }
