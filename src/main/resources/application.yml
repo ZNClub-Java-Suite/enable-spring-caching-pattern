@@ -1,5 +1,7 @@
 spring:
   application:
     name: spring-caching-app
+  profiles:
+    active: context_cache
 server:
   port: 10001
