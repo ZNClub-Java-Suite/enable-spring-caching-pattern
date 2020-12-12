@@ -9,6 +9,7 @@ import spring.znevzz.reactive.bean.ICacheRequest;
 import spring.znevzz.reactive.bean.ICacheResponse;
 import spring.znevzz.reactive.constant.Action;
 import spring.znevzz.reactive.constant.Request;
+import spring.znevzz.reactive.exception.NoResponseException;
 import spring.znevzz.reactive.router.CacheMessageRouter;
 
 import java.util.HashMap;
@@ -42,16 +43,22 @@ public class CacheManager {
                     cacheService.get(request)
             );
 
+/*
         } else if (action == Action.EVICT_CACHE) {
             cacheService.evict(request);
             responses.put(request,
                     cacheService.put(request)
             );
+*/
 
         } else if (action == Action.PUT_CACHE) {
-            responses.put(request,
-                    cacheService.put(request)
-            );
+            Flux<ICacheResponse> result = null;
+            try {
+                result = cacheService.put(request);
+                responses.put(request, result);
+            } catch (NoResponseException e) {
+                log.error("Cannot update cache due to:", e);
+            }
         }
     }
 }

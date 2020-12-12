@@ -72,8 +72,9 @@ class CacheControllerTest {
                 .expectStatus()
                 .isOk()
                 .expectBody()
-                .json("[{}]");
+                .json("{}");
     }
+
     @TestConfiguration
     static class TestConfig {
         @Bean
