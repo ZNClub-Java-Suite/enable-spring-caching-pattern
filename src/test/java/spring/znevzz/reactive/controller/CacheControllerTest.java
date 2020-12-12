@@ -15,6 +15,7 @@ import spring.znevzz.reactive.handler.CacheRequestHandler;
 import spring.znevzz.reactive.handler.IRequestHandler;
 import spring.znevzz.reactive.router.CacheMessageRouter;
 import spring.znevzz.reactive.service.CacheManager;
+import spring.znevzz.reactive.service.MockDataService;
 import spring.znevzz.reactive.service.SimpleCacheService;
 
 @ExtendWith(SpringExtension.class)
@@ -78,7 +79,9 @@ class CacheControllerTest {
         @Bean
         public IRequestHandler handler(){
             CacheManager manager = new CacheManager();
-            manager.setCacheService(new SimpleCacheService());
+            SimpleCacheService cacheService = new SimpleCacheService();
+            cacheService.setService(new MockDataService());
+            manager.setCacheService(cacheService);
             manager.setRouter(new CacheMessageRouter());
             return new CacheRequestHandler(manager);
         }

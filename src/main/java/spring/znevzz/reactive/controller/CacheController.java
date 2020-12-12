@@ -25,7 +25,8 @@ public class CacheController {
 
     @PostMapping("/cache")
     public Flux<ICacheResponse> fromCache(@RequestBody SimpleCacheRequest request) {
-        Flux<ICacheResponse> firstFetch = handler.viewFromCache(request).log("viewFromCache");
+        Flux<ICacheResponse> firstFetch = handler.viewFromCache(request)
+                .log("viewFromCache");
         Flux firstResult = firstFetch
                 .map(ICacheResponse::getPayload)
                 .filter(Optional::isPresent)
